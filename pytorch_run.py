@@ -104,12 +104,12 @@ model_test.to(device)
 #Passing the Dataset of Images and Labels
 #######################################################
 
-t_data = '/home/dxw/Dataset/ISIC2017_train_imgs/'
-l_data = '/home/dxw/Dataset/ISIC2017_train_labels/'
-test_image = '/home/dxw/Dataset/ISIC2017_test_imgs/ISIC_0012086.jpg'
-test_label = '/home/dxw/Dataset/ISIC2017_test_labels/ISIC_0012086_segmentation.png'
-test_folderP = '/home/dxw/Dataset/ISIC2017_test_imgs/*'
-test_folderL = '/home/dxw/Dataset/ISIC2017_test_labels/*'
+t_data = '/kaggle/input/isic2017/ISIC2017_train_imgs/'
+l_data = '/kaggle/input/isic2017/ISIC2017_train_labels/'
+test_image = '/kaggle/input/isic2017/ISIC2017_test_imgs/ISIC_0012086.jpg'
+test_label = '/kaggle/input/isic2017/ISIC2017_test_labels/ISIC_0012086_segmentation.png'
+test_folderP = '/kaggle/input/isic2017/ISIC2017_test_imgs/*'
+test_folderL = '/kaggle/input/isic2017/ISIC2017_test_labels/*'
 
 Training_Data = Images_Dataset_folder(t_data,
                                       l_data)
@@ -157,14 +157,14 @@ valid_loader = torch.utils.data.DataLoader(Training_Data, batch_size=batch_size,
 #Using Adam as Optimizer
 #######################################################
 
-initial_lr = 0.001
+initial_lr = 0.0003
 opt = torch.optim.Adam(model_test.parameters(), lr=initial_lr) # try SGD
 #opt = optim.SGD(model_test.parameters(), lr = initial_lr, momentum=0.99)
 
 MAX_STEP = int(500)
 #scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(opt, MAX_STEP, eta_min=1e-8)
 #scheduler = optim.lr_scheduler.CosineAnnealingLr(opt, epoch, 1)
-scheduler = LR_Scheduler('cos', 0.001, 50, int(2000/8))
+scheduler = LR_Scheduler('cos', 0.0003, 50, int(2000/8))
 
 #######################################################
 #Writing the params to tensorboard
