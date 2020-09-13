@@ -27,7 +27,7 @@ class LR_Scheduler(object):
         self.epoch = -1
         self.warmup_iters = warmup_epochs * iters_per_epoch
 
-    def __call__(self, optimizer, i, epoch, best_pred):
+    def __call__(self, optimizer, i, epoch, best_pred = 0):
         T = epoch * self.iters_per_epoch + i
         if self.mode == 'cos':
             lr = 0.5 * self.lr * (1 + math.cos(1.0 * T / self.N * math.pi))
