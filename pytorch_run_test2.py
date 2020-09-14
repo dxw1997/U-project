@@ -151,6 +151,7 @@ x_sort_test = natsort.natsorted(read_test_folder)  # To sort
 read_test_folder112 = './model/gen_images'
 
 
+os.mkdir('./model')
 if os.path.exists(read_test_folder112) and os.path.isdir(read_test_folder112):
     shutil.rmtree(read_test_folder112)
 
