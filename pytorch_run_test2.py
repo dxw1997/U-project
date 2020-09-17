@@ -82,7 +82,7 @@ def model_unet(model_input, in_channel=3, out_channel=1):
 #passsing this string so that if it's AttU_Net or R2ATTU_Net it doesn't throw an error at torchSummary
 
 
-model_test = model_unet(model_Inputs[0], 3, 1)
+model_test = model_unet(model_Inputs[5], 3, 1)
 
 model_test.to(device)
 
@@ -106,15 +106,15 @@ test_folderL = '/kaggle/input/isic2017/ISIC2017_test_labels/*'
 
 data_transform = torchvision.transforms.Compose([
             torchvision.transforms.Resize((128,128)),
-            torchvision.transforms.CenterCrop(96),
+ #           torchvision.transforms.CenterCrop(96),
             torchvision.transforms.ToTensor(),
-            torchvision.transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
+#            torchvision.transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
         ])
 data_transform2 = torchvision.transforms.Compose([
             torchvision.transforms.Resize((128,128)),
-            torchvision.transforms.CenterCrop(96),
+  #          torchvision.transforms.CenterCrop(96),
             torchvision.transforms.ToTensor(),
-            torchvision.transforms.Normalize(mean=[0.5], std=[0.5])
+   #         torchvision.transforms.Normalize(mean=[0.5], std=[0.5])
         ])
 
 #######################################################
@@ -238,13 +238,13 @@ for i in range(len(read_test_folder)):
 
 data_transform31 = torchvision.transforms.Compose([
             torchvision.transforms.Resize((128,128)),
-            torchvision.transforms.CenterCrop(96),
+    #        torchvision.transforms.CenterCrop(96),
             torchvision.transforms.Grayscale(),
 #            torchvision.transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
         ])
 data_transform32 = torchvision.transforms.Compose([
             torchvision.transforms.Resize((128,128)),
-            torchvision.transforms.CenterCrop(96),
+     #       torchvision.transforms.CenterCrop(96),
             torchvision.transforms.Grayscale(),
 #            torchvision.transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
         ])
