@@ -90,7 +90,7 @@ def model_unet(model_input, in_channel=3, out_channel=1):
 #passsing this string so that if it's AttU_Net or R2ATTU_Net it doesn't throw an error at torchSummary
 
 
-model_test = model_unet(model_Inputs[0], 3, 1)
+model_test = model_unet(model_Inputs[5], 3, 1)
 
 model_test.to(device)
 
@@ -120,15 +120,15 @@ Training_Data = Images_Dataset_folder(t_data,
 
 data_transform = torchvision.transforms.Compose([
             torchvision.transforms.Resize((128,128)),
-            torchvision.transforms.CenterCrop(96),
+   #         torchvision.transforms.CenterCrop(96),
             torchvision.transforms.ToTensor(),
-            torchvision.transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
+#            torchvision.transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
         ])
 data_transform2 = torchvision.transforms.Compose([
             torchvision.transforms.Resize((128,128)),
-            torchvision.transforms.CenterCrop(96),
+  #          torchvision.transforms.CenterCrop(96),
             torchvision.transforms.ToTensor(),
-            torchvision.transforms.Normalize(mean=[0.5], std=[0.5])
+ #           torchvision.transforms.Normalize(mean=[0.5], std=[0.5])
         ])
 
 #######################################################
@@ -339,7 +339,6 @@ for i in range(epoch):
     #######################################################
 
     if valid_loss <= valid_loss_min and epoch_valid >= i: # and i_valid <= 2:
-
         print('Validation loss decreased ({:.6f} --> {:.6f}).  Saving model '.format(valid_loss_min, valid_loss))
         torch.save(model_test.state_dict(),'./model/Unet_D_' +
                                               str(epoch) + '_' + str(batch_size) + '/Unet_epoch_' + str(epoch)
@@ -349,9 +348,15 @@ for i in range(epoch):
             print(i_valid)
             i_valid = i_valid+1
         valid_loss_min = valid_loss
+        patience = 0 
         #if i_valid ==3:
          #   break
-
+    else:
+        ## stop the training process
+        patience = patience+1
+        if patience >= 10:
+            break
+    
     #######################################################
     # Extracting the intermediate layers
     #######################################################
