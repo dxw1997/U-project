@@ -136,7 +136,9 @@ if torch.cuda.is_available():
 #Loading the model
 #######################################################
 
-model_test.load_state_dict(torch.load('/kaggle/input/trainedmodel/Unet_epoch_50_batchsize_8.pth'))
+model_test.load_state_dict(torch.load('./model/Unet_D_' +
+                   str(epoch) + '_' + str(batch_size)+ '/Unet_epoch_' + str(epoch)
+                   + '_batchsize_' + str(batch_size) + '.pth'))
 
 model_test.eval()
 
