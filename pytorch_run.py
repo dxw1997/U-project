@@ -120,13 +120,13 @@ Training_Data = Images_Dataset_folder(t_data,
 
 data_transform = torchvision.transforms.Compose([
             torchvision.transforms.Resize((128,128)),
-   #         torchvision.transforms.CenterCrop(96),
+#            torchvision.transforms.CenterCrop(96),
             torchvision.transforms.ToTensor(),
 #            torchvision.transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
         ])
 data_transform2 = torchvision.transforms.Compose([
             torchvision.transforms.Resize((128,128)),
-  #          torchvision.transforms.CenterCrop(96),
+ #           torchvision.transforms.CenterCrop(96),
             torchvision.transforms.ToTensor(),
  #           torchvision.transforms.Normalize(mean=[0.5], std=[0.5])
         ])
@@ -164,7 +164,7 @@ opt = torch.optim.Adam(model_test.parameters(), lr=initial_lr) # try SGD
 MAX_STEP = int(500)
 #scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(opt, MAX_STEP, eta_min=1e-8)
 #scheduler = optim.lr_scheduler.CosineAnnealingLr(opt, epoch, 1)
-scheduler = LR_Scheduler('cos', 0.0003, 50, int(2000/8))
+scheduler = LR_Scheduler('poly', 0.0003, 50, int(2000/8))
 
 #######################################################
 #Writing the params to tensorboard
