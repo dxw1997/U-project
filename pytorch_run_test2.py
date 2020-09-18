@@ -136,9 +136,12 @@ if torch.cuda.is_available():
 #Loading the model
 #######################################################
 
-model_test.load_state_dict(torch.load('./model/Unet_D_' +
-                   str(epoch) + '_' + str(batch_size)+ '/Unet_epoch_' + str(epoch)
-                   + '_batchsize_' + str(batch_size) + '.pth'))
+#model_test.load_state_dict(torch.load('./model/Unet_D_' +
+#                   str(epoch) + '_' + str(batch_size)+ '/Unet_epoch_' + str(epoch)
+#                   + '_batchsize_' + str(batch_size) + '.pth'))
+
+
+model_test.load_state_dict(torch.load('/kaggle/input/trainedmodel1/Unet_epoch_50_batchsize_8.pth'))
 
 model_test.eval()
 
@@ -152,7 +155,7 @@ x_sort_test = natsort.natsorted(read_test_folder)  # To sort
 
 read_test_folder112 = './model/gen_images'
 
-
+###need to be deleted
 os.mkdir('./model')
 if os.path.exists(read_test_folder112) and os.path.isdir(read_test_folder112):
     shutil.rmtree(read_test_folder112)
