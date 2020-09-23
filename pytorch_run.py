@@ -90,7 +90,7 @@ def model_unet(model_input, in_channel=3, out_channel=1):
 #passsing this string so that if it's AttU_Net or R2ATTU_Net it doesn't throw an error at torchSummary
 
 
-model_test = model_unet(model_Inputs[5], 3, 1)
+model_test = model_unet(model_Inputs[0], 3, 1)
 
 model_test.to(device)
 
@@ -106,26 +106,28 @@ model_test.to(device)
 
 t_data = '/kaggle/input/isic2017/ISIC2017_train_imgs/'
 l_data = '/kaggle/input/isic2017/ISIC2017_train_labels/'
+validation_imgs = '/kaggle/input/isic2017/ISIC2017_val_imgs/'
+validation_labels = '/kaggle/input/isic2017/ISIC2017_val_labels/'
 test_image = '/kaggle/input/isic2017/ISIC2017_test_imgs/ISIC_0012086.jpg'
 test_label = '/kaggle/input/isic2017/ISIC2017_test_labels/ISIC_0012086_segmentation.png'
 test_folderP = '/kaggle/input/isic2017/ISIC2017_test_imgs/*'
 test_folderL = '/kaggle/input/isic2017/ISIC2017_test_labels/*'
 
-Training_Data = Images_Dataset_folder(t_data,
-                                      l_data)
+Training_Data = Images_Dataset_folder(train_imgs, train_labels)
+Validation_Data = Images_Dataset_folder(validation_imgs, validation_labels)
 
 #######################################################
 #Giving a transformation for input data
 #######################################################
 
 data_transform = torchvision.transforms.Compose([
-            torchvision.transforms.Resize((128,128)),
+            torchvision.transforms.Resize((192,256)),
 #            torchvision.transforms.CenterCrop(96),
             torchvision.transforms.ToTensor(),
-#            torchvision.transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
+            torchvision.transforms.Normalize(mean=[0.7077172, 0.5913799, 0.54669064], std=[0.15470739, 0.16332993, 0.17838475])
         ])
 data_transform2 = torchvision.transforms.Compose([
-            torchvision.transforms.Resize((128,128)),
+            torchvision.transforms.Resize((192, 256)),
  #           torchvision.transforms.CenterCrop(96),
             torchvision.transforms.ToTensor(),
  #           torchvision.transforms.Normalize(mean=[0.5], std=[0.5])
@@ -136,22 +138,26 @@ data_transform2 = torchvision.transforms.Compose([
 #######################################################
 
 num_train = len(Training_Data)
-indices = list(range(num_train))
-split = int(np.floor(valid_size * num_train))
+num_valid = len(Validation_Data)
+indices_train = list(range(num_train))
+indices_valid = list(range(num_valid))
 
 if shuffle:
     np.random.seed(random_seed)
-    np.random.shuffle(indices)
+    #np.random.shuffle(indices)
+    np.random.shuffle(indices_train)
+    np.random.shuffle(indices_valid)
 
-train_idx, valid_idx = indices[split:], indices[:split]
+train_idx, valid_idx = indices_train, indices_valid
 train_sampler = SubsetRandomSampler(train_idx)
 valid_sampler = SubsetRandomSampler(valid_idx)
 
+
 train_loader = torch.utils.data.DataLoader(Training_Data, batch_size=batch_size, sampler=train_sampler,
                                            num_workers=num_workers, pin_memory=pin_memory,)
-
-valid_loader = torch.utils.data.DataLoader(Training_Data, batch_size=batch_size, sampler=valid_sampler,
+valid_loader = torch.utils.data.DataLoader(Validation_Data, batch_size=batch_size, sampler=valid_sampler,
                                            num_workers=num_workers, pin_memory=pin_memory,)
+
 
 #######################################################
 #Using Adam as Optimizer
@@ -164,7 +170,7 @@ opt = torch.optim.Adam(model_test.parameters(), lr=initial_lr) # try SGD
 MAX_STEP = int(500)
 #scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(opt, MAX_STEP, eta_min=1e-8)
 #scheduler = optim.lr_scheduler.CosineAnnealingLr(opt, epoch, 1)
-scheduler = LR_Scheduler('cos', 0.001, 50, int(2000*0.85/8))
+scheduler = LR_Scheduler('cos', 0.001, 50, int(2000*/8))
 
 #######################################################
 #Writing the params to tensorboard
