@@ -245,7 +245,7 @@ data_transform31 = torchvision.transforms.Compose([
             torchvision.transforms.Resize((192,256)),
     #        torchvision.transforms.CenterCrop(96),
             torchvision.transforms.Grayscale(),
-            torchvision.transforms.Normalize(mean=[0.7077172, 0.5913799, 0.54669064], std=[0.15470739, 0.16332993, 0.17838475])
+#            torchvision.transforms.Normalize(mean=[0.7077172, 0.5913799, 0.54669064], std=[0.15470739, 0.16332993, 0.17838475])
         ])
 data_transform32 = torchvision.transforms.Compose([
             torchvision.transforms.Resize((192,256)),
