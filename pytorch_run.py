@@ -104,8 +104,8 @@ model_test.to(device)
 #Passing the Dataset of Images and Labels
 #######################################################
 
-t_data = '/kaggle/input/isic2017/ISIC2017_train_imgs/'
-l_data = '/kaggle/input/isic2017/ISIC2017_train_labels/'
+train_imgs = '/kaggle/input/isic2017/ISIC2017_train_imgs/'
+train_labels = '/kaggle/input/isic2017/ISIC2017_train_labels/'
 validation_imgs = '/kaggle/input/isic2017/ISIC2017_val_imgs/'
 validation_labels = '/kaggle/input/isic2017/ISIC2017_val_labels/'
 test_image = '/kaggle/input/isic2017/ISIC2017_test_imgs/ISIC_0012086.jpg'
