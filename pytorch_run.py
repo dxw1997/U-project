@@ -170,7 +170,7 @@ opt = torch.optim.Adam(model_test.parameters(), lr=initial_lr) # try SGD
 MAX_STEP = int(500)
 #scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(opt, MAX_STEP, eta_min=1e-8)
 #scheduler = optim.lr_scheduler.CosineAnnealingLr(opt, epoch, 1)
-scheduler = LR_Scheduler('cos', 0.001, 50, int(2000*/8))
+scheduler = LR_Scheduler('cos', 0.001, 50, int(2000/8))
 
 #######################################################
 #Writing the params to tensorboard
