@@ -82,7 +82,7 @@ def model_unet(model_input, in_channel=3, out_channel=1):
 #passsing this string so that if it's AttU_Net or R2ATTU_Net it doesn't throw an error at torchSummary
 
 
-model_test = model_unet(model_Inputs[0], 3, 1)
+model_test = model_unet(model_Inputs[2], 3, 1)
 
 model_test.to(device)
 
