@@ -22,6 +22,7 @@ import torchsummary
 import shutil
 import random
 from Models import Unet_dict, NestedUNet, U_Net, R2U_Net, AttU_Net, R2AttU_Net, Resnet_Unet
+from Models2 import reS_Unet, reS_Unet_L
 from losses import calc_loss, dice_loss, threshold_predictions_v,threshold_predictions_p
 from ploting import plot_kernels, LayerActivations, input_images, plot_grad_flow
 from Metrics import dice_coeff, accuracy_score
@@ -80,7 +81,7 @@ if train_on_gpu:
 #Setting up the model
 #######################################################
 
-model_Inputs = [U_Net, R2U_Net, AttU_Net, R2AttU_Net, NestedUNet, Resnet_Unet]
+model_Inputs = [U_Net, R2U_Net, AttU_Net, R2AttU_Net, NestedUNet, Resnet_Unet, reS_Unet, reS_Unet_L]
 
 
 def model_unet(model_input, in_channel=3, out_channel=1):
@@ -90,7 +91,7 @@ def model_unet(model_input, in_channel=3, out_channel=1):
 #passsing this string so that if it's AttU_Net or R2ATTU_Net it doesn't throw an error at torchSummary
 
 
-model_test = model_unet(model_Inputs[2], 3, 1)
+model_test = model_unet(model_Inputs[5], 3, 1)
 
 model_test.to(device)
 
