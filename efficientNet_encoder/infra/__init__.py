@@ -1,11 +1,11 @@
-from model import SegmentationModel
+from .model import SegmentationModel
 
-from modules import (
+from .modules import (
     Conv2dReLU,
     Attention,
 )
 
-from heads import (
+from .heads import (
     SegmentationHead,
     ClassificationHead,
 )
