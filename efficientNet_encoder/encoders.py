@@ -5,7 +5,7 @@ import torch.utils.model_zoo as model_zoo
 
 from efficientnet import efficient_net_encoders
 
-from _preprocessing import preprocess_input
+from ._preprocessing import preprocess_input
 
 encoders = {}
 encoders.update(efficient_net_encoders)
