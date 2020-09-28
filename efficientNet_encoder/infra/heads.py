@@ -1,5 +1,5 @@
 import torch.nn as nn
-from modules import Flatten, Activation
+from .modules import Flatten, Activation
 
 
 class SegmentationHead(nn.Sequential):
