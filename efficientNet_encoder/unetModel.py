@@ -1,8 +1,8 @@
 from typing import Optional, Union, List
-from decoder import UnetDecoder
-from encoders import get_encoder
-from infra import SegmentationModel
-from infra import SegmentationHead, ClassificationHead
+from .decoder import UnetDecoder
+from .encoders import get_encoder
+from .infra import SegmentationModel
+from .infra import SegmentationHead, ClassificationHead
 
 
 class Unet(SegmentationModel):
