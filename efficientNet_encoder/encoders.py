@@ -3,7 +3,7 @@ import torch.utils.model_zoo as model_zoo
 
 ##efficientnet顺利的话，再加入resnet_encoders等
 
-from efficientnet import efficient_net_encoders
+from .efficientnet import efficient_net_encoders
 
 from ._preprocessing import preprocess_input
 
