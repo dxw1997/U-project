@@ -23,6 +23,7 @@ import shutil
 import random
 from Models import Unet_dict, NestedUNet, U_Net, R2U_Net, AttU_Net, R2AttU_Net, Resnet_Unet
 from Models2 import reS_Unet, reS_Unet_L
+from efficientNet_encoder.unetModel import Unet_efficientnet
 from losses import calc_loss, dice_loss, threshold_predictions_v,threshold_predictions_p
 from ploting import plot_kernels, LayerActivations, input_images, plot_grad_flow
 from Metrics import dice_coeff, accuracy_score
@@ -82,8 +83,8 @@ def model_unet(model_input, in_channel=3, out_channel=1):
 #passsing this string so that if it's AttU_Net or R2ATTU_Net it doesn't throw an error at torchSummary
 
 
-model_test = model_unet(model_Inputs[5], 3, 1)
-
+#model_test = model_unet(model_Inputs[5], 3, 1)
+mode_test = Unet_efficientnet("efficientnet-b0", 5, "imagenet")
 model_test.to(device)
 
 #######################################################
@@ -105,13 +106,16 @@ test_folderL = '/kaggle/input/isic2017/ISIC2017_test_labels/*'
 
 
 data_transform = torchvision.transforms.Compose([
-            torchvision.transforms.Resize((192,256)),
+            torchvision.transforms.Resize((224,224)),
  #           torchvision.transforms.CenterCrop(96),
             torchvision.transforms.ToTensor(),
-            torchvision.transforms.Normalize(mean=[0.7077172, 0.5913799, 0.54669064], std=[0.15470739, 0.16332993, 0.17838475])
+            torchvision.transforms.Normalize(
+		    mean=[0.485, 0.456, 0.406], 
+		    std=[0.229, 0.224, 0.225]
+	    )
         ])
 data_transform2 = torchvision.transforms.Compose([
-            torchvision.transforms.Resize((192,256)),
+            torchvision.transforms.Resize((224,224)),
   #          torchvision.transforms.CenterCrop(96),
             torchvision.transforms.ToTensor(),
    #         torchvision.transforms.Normalize(mean=[0.5], std=[0.5])
@@ -242,7 +246,7 @@ for i in range(len(read_test_folder)):
 ####################################################
 
 data_transform31 = torchvision.transforms.Compose([
-            torchvision.transforms.Resize((192,256)),
+            torchvision.transforms.Resize((224,224)),
     #        torchvision.transforms.CenterCrop(96),
             torchvision.transforms.Grayscale(),
 #            torchvision.transforms.Normalize(mean=[0.7077172, 0.5913799, 0.54669064], std=[0.15470739, 0.16332993, 0.17838475])
