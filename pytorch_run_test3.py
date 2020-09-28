@@ -84,7 +84,7 @@ def model_unet(model_input, in_channel=3, out_channel=1):
 
 
 #model_test = model_unet(model_Inputs[5], 3, 1)
-mode_test = Unet_efficientnet("efficientnet-b0", 5, "imagenet")
+model_test = Unet_efficientnet("efficientnet-b0", 5, "imagenet")
 model_test.to(device)
 
 #######################################################
