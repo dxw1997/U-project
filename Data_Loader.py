@@ -67,20 +67,23 @@ class Images_Dataset_folder(torch.utils.data.Dataset):
             self.tx = self.transformI
         else:
             self.tx = torchvision.transforms.Compose([
-                torchvision.transforms.Resize((192,256)),
+                torchvision.transforms.Resize((224, 224)),
                 #torchvision.transforms.CenterCrop(96),
                 torchvision.transforms.RandomRotation((-10,10)),
-                torchvision.transforms.RandomHorizontalFlip(),
+                #torchvision.transforms.RandomHorizontalFlip(),
                 torchvision.transforms.ColorJitter(brightness=0.4, contrast=0.4, saturation=0.4),
                 torchvision.transforms.ToTensor(),
-                torchvision.transforms.Normalize(mean=[0.7077172, 0.5913799, 0.54669064], std=[0.15470739, 0.16332993, 0.17838475])
+                torchvision.transforms.Normalize(
+                    mean=[0.485, 0.456, 0.406], 
+                    std=[0.229, 0.224, 0.225]
+                )
             ])
 
         if self.transformM:
             self.lx = self.transformM
         else:
             self.lx = torchvision.transforms.Compose([
-                torchvision.transforms.Resize((192,256)),
+                torchvision.transforms.Resize((224,224)),
                 #torchvision.transforms.CenterCrop(96),
                 torchvision.transforms.RandomRotation((-10,10)),
                 #torchvision.transforms.RandomRotation((-10,10), fill=(0,)),
