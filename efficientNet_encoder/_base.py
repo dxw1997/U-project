@@ -3,7 +3,7 @@ import torch.nn as nn
 from typing import List
 from collections import OrderedDict
 
-import _utils as utils
+from . import _utils as utils
 
 
 class EncoderMixin:
