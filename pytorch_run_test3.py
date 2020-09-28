@@ -23,7 +23,7 @@ import shutil
 import random
 from Models import Unet_dict, NestedUNet, U_Net, R2U_Net, AttU_Net, R2AttU_Net, Resnet_Unet
 from Models2 import reS_Unet, reS_Unet_L
-from efficientNet_encoder.unetModel import Unet_efficientnet
+from efficientNet_encoder.unetModel import Unet as Unet_efficientnet
 from losses import calc_loss, dice_loss, threshold_predictions_v,threshold_predictions_p
 from ploting import plot_kernels, LayerActivations, input_images, plot_grad_flow
 from Metrics import dice_coeff, accuracy_score
