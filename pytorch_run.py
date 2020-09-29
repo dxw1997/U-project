@@ -169,14 +169,14 @@ valid_loader = torch.utils.data.DataLoader(Validation_Data, batch_size=batch_siz
 #Using Adam as Optimizer
 #######################################################
 
-initial_lr = 0.0001
+initial_lr = 0.00003
 opt = torch.optim.Adam(model_test.parameters(), lr=initial_lr) # try SGD
 #opt = optim.SGD(model_test.parameters(), lr = initial_lr, momentum=0.99)
 
 MAX_STEP = int(500)
 #scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(opt, MAX_STEP, eta_min=1e-8)
 #scheduler = optim.lr_scheduler.CosineAnnealingLr(opt, epoch, 1)
-scheduler = LR_Scheduler('cos', initial_lr, 50, int(2000/8))
+scheduler = LR_Scheduler('cos', initial_lr, 60, int(2000/8))
 
 #######################################################
 #Writing the params to tensorboard
