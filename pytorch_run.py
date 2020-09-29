@@ -94,7 +94,22 @@ def model_unet(model_input, in_channel=3, out_channel=1):
 
 #model_test = model_unet(model_Inputs[8], 3, 1)
 ##use efficientnet backbone
-model_test = Unet_efficientnet("efficientnet-b0", 4, "imagenet")
+'''
+def __init__(
+        self,
+        encoder_name: str = "efficientnet-b0",
+        encoder_depth: int = 5,
+        encoder_weights: str = "imagenet",
+        decoder_use_batchnorm: bool = True,
+        decoder_channels: List[int] = (256, 128, 64, 32, 16),
+        decoder_attention_type: Optional[str] = None,
+        in_channels: int = 3,
+        classes: int = 1,
+        activation: Optional[Union[str, callable]] = None,
+        aux_params: Optional[dict] = None,
+    ):
+'''
+model_test = Unet_efficientnet("efficientnet-b0", 4, "imagenet", decoder_channels=(128, 64, 32, 16))
 model_test.to(device)
 
 #######################################################
