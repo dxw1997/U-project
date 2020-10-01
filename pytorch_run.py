@@ -184,7 +184,7 @@ valid_loader = torch.utils.data.DataLoader(Validation_Data, batch_size=batch_siz
 #Using Adam as Optimizer
 #######################################################
 
-initial_lr = 0.0001
+initial_lr = 0.0003
 opt = torch.optim.Adam(model_test.parameters(), lr=initial_lr) # try SGD
 #opt = optim.SGD(model_test.parameters(), lr = initial_lr, momentum=0.99)
 
