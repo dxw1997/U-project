@@ -23,6 +23,7 @@ import shutil
 import random
 from Models import Unet_dict, NestedUNet, U_Net, R2U_Net, AttU_Net, R2AttU_Net, Resnet_Unet
 from Models2 import reS_Unet, reS_Unet_L
+from ModelZoo.fcn import FCN8s, VGGNet
 from efficientNet_encoder.unetModel import Unet as Unet_efficientnet
 from losses import calc_loss, dice_loss, threshold_predictions_v,threshold_predictions_p
 from ploting import plot_kernels, LayerActivations, input_images, plot_grad_flow
@@ -47,7 +48,7 @@ device = torch.device("cuda:0" if train_on_gpu else "cpu")
 batch_size = 8
 print('batch_size = ' + str(batch_size))
 #valid_size = 0.15
-epoch = 50
+epoch = 10
 print('epoch = ' + str(epoch))
 
 random_seed = random.randint(1, 100)
@@ -85,7 +86,9 @@ def model_unet(model_input, in_channel=3, out_channel=1):
 
 #model_test = model_unet(model_Inputs[5], 3, 1)
 #model_test = Unet_efficientnet("efficientnet-b0", 5, "imagenet")
-model_test = Unet_efficientnet("efficientnet-b0", 4, "imagenet", decoder_channels=(128, 64, 32, 16))
+#model_test = Unet_efficientnet("efficientnet-b0", 4, "imagenet", decoder_channels=(128, 64, 32, 16))
+vgg_model = VGGNet(requires_grad=True)
+model_test = FCN8s(pretrained_net=vgg_model, n_class=1)
 model_test.to(device)
 
 #######################################################
@@ -102,8 +105,11 @@ t_data = '/kaggle/input/isic2017/ISIC2017_train_imgs/'
 l_data = '/kaggle/input/isic2017/ISIC2017_train_labels/'
 test_image = '/kaggle/input/isic2017/ISIC2017_test_imgs/ISIC_0012086.jpg'
 test_label = '/kaggle/input/isic2017/ISIC2017_test_labels/ISIC_0012086_segmentation.png'
-test_folderP = '/kaggle/input/isic2017/ISIC2017_test_imgs/*'
-test_folderL = '/kaggle/input/isic2017/ISIC2017_test_labels/*'
+#test_folderP = '/kaggle/input/isic2017/ISIC2017_test_imgs/*'
+#test_folderL = '/kaggle/input/isic2017/ISIC2017_test_labels/*'
+test_folderP = '/kaggle/working/ph2/images/*'
+test_folderL = '/kaggle/working/ph2/labels/*'
+
 
 
 data_transform = torchvision.transforms.Compose([
@@ -140,14 +146,14 @@ if torch.cuda.is_available():
 #######################################################
 #Loading the model
 #######################################################
-
+'''
 model_test.load_state_dict(torch.load('./model/Unet_D_' +
                    str(epoch) + '_' + str(batch_size)+ '/Unet_epoch_' + str(epoch)
                    + '_batchsize_' + str(batch_size) + '.pth'))
+'''
 
 
-#model_test.load_state_dict(torch.load('/kaggle/input/trainedmodel1/Unet_epoch_50_batchsize_8.pth'))
-
+model_test.load_state_dict(torch.load('/kaggle/input/trainedmodel2/Unet_epoch_10_batchsize_8.pth'))
 model_test.eval()
 
 #######################################################
@@ -161,7 +167,7 @@ x_sort_test = natsort.natsorted(read_test_folder)  # To sort
 read_test_folder112 = './model/gen_images'
 
 ###need to be deleted
-#os.mkdir('./model')
+os.mkdir('./model')
 if os.path.exists(read_test_folder112) and os.path.isdir(read_test_folder112):
     shutil.rmtree(read_test_folder112)
 
@@ -275,6 +281,15 @@ x_count = 0
 x_dice = 0### used for selection
 t_acc, t_sen, t_spe, t_dice, t_jacc = 0.0,0.0,0.0,0.0,0.0
 
+preName="predictionResults.txt"
+#if os.path.exists(preName):
+#	os.remove(preName)
+worseName="badResultsIndex.txt"
+goodPredName="goodResultsIndex.txt"
+f = open(preName, 'w+')
+f2 = open(worseName, 'w+')
+f3 = open(goodPredName, 'w+')
+
 for i in range(len(read_test_folderP)):
 
     x = Image.open(x_sort_testP[i])
@@ -282,9 +297,20 @@ for i in range(len(read_test_folderP)):
     s = np.array(s)
     s = threshold_predictions_v(s)
 
+    #fname = read_test_folderP[i].split('.')
+    fname = x_sort_testP[i].split('.')[1]
+#    print(fname)
+    fname = fname.split('/')[-1]
+#    print(fname)
+    # for isic
+    #fname = fname.split('_')[1]
+#    print(fname)
+    #fname = 'ISIC_'+fname
+    #for ph2
+    fname = fname.split('_')[0]
+    #print(fname)
     #save the images
-    x1 = plt.imsave('./model/pred_threshold/im_epoch_' + str(epoch) + 'int_' + str(i)
-                    + '_img_no_' + str(img_test_no) + '.png', s)
+    x1 = plt.imsave('./model/pred_threshold/' + fname + '_thrPrediction.png', s)
 
     y = Image.open(x_sort_testL[i])
     s2 = data_transform32(y)
@@ -292,26 +318,39 @@ for i in range(len(read_test_folderP)):
    # s2 =threshold_predictions_v(s2)
 
     #save the Images
-    y1 = plt.imsave('./model/label_threshold/im_epoch_' + str(epoch) + 'int_' + str(i)
-                    + '_img_no_' + str(img_test_no) + '.png', s3)
+    y1 = plt.imsave('./model/label_threshold/' + fname + '_thrLabel.png', s3)
 
     total = dice_coeff(s, s3)
     acc, sen, spe, dice, jacc = accuracy_score(s, s3)
     names = x_sort_testP[i].split('/')
-    print(names[-1]+'(dice1): '+str(total))
-    print('accuracy:%.5f, sensitivity:%.5f, specificity:%.5f, dice:%.5f, jaccard:%.5f'%(acc, sen, spe, dice, jacc))
+    logInfoHead = names[-1]+'(dice1): '+str(total)
+    logInfoBody = 'accuracy:%.5f, sensitivity:%.5f, specificity:%.5f, dice:%.5f, jaccard:%.5f'%(acc, sen, spe, dice, jacc)
+    f.write(logInfoHead+"\n")
+    f.write(logInfoBody+"\n")
+    print(logInfoHead)
+    print(logInfoBody)
     t_acc += acc
     t_sen += sen
     t_spe += spe
     t_dice += dice
     t_jacc += jacc
-    if total <= 0.3:
+    if total <= 0.65:
         x_count += 1
+        f2.write("name:%s, dice:%.5f"%(names[-1], total)+"\n")
+    if total >= 0.85:
+        f3.write("name:%s, dice:%.5f"%(names[-1], total)+"\n")
     if total > 0.3:
         x_dice = x_dice + total
     dice_score123 = dice_score123 + total
 
 
+f.write('Dice Score : ' + str(dice_score123/len(read_test_folderP)) + '\n')
+f.write('accuracy:%.5f, sensitivity:%.5f, specificity:%.5f, dice:%.5f, jaccard:%.5f'%( t_acc/len(read_test_folderP), 
+    t_sen/len(read_test_folderP), t_spe/len(read_test_folderP), t_dice/len(read_test_folderP), t_jacc/len(read_test_folderP)))
+f.close()
+f2.write("total bad testing results is:%d" %(x_count))
+f2.close()
+f3.close()
 print('Dice Score : ' + str(dice_score123/len(read_test_folderP)))
 print('accuracy:%.5f, sensitivity:%.5f, specificity:%.5f, dice:%.5f, jaccard:%.5f'%( t_acc/len(read_test_folderP), 
 	t_sen/len(read_test_folderP), t_spe/len(read_test_folderP), t_dice/len(read_test_folderP), t_jacc/len(read_test_folderP)))#print(x_count)
